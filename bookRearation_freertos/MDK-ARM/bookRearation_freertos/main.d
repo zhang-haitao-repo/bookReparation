@@ -42,3 +42,6 @@ bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+bookrearation_freertos\main.o: ../Drivers/bsp/bsp_steper.h
+bookrearation_freertos\main.o: ..\SYSTEM\delay\delay.h
+bookrearation_freertos\main.o: ..\SYSTEM\sys\sys.h
