@@ -42,7 +42,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern uint8_t aRxBuffer[1];
+extern uint8_t recieveData[100];
+extern uint8_t moveFlag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -185,7 +187,7 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-
+	HAL_UART_Receive_IT(&huart1,(uint8_t *)aRxBuffer,1);
   /* USER CODE END USART1_IRQn 1 */
 }
 
@@ -194,7 +196,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART1)
 	{
+		static uint16_t i = 0;
+		// HAL_UART_Transmit(&huart1,aRxBuffer,1,1);
+		if(aRxBuffer[0] == 0x0a){
+			recieveData[i] = aRxBuffer[0];
+			i = 0;
+			moveFlag = 1;
+		}else{
+			recieveData[i] = aRxBuffer[0];
+			++i;
+		}
 		
+		HAL_UART_Receive_IT(&huart1, (uint8_t *)aRxBuffer, 1);   //再开启接收中断
 	}
 }
 /* USER CODE END 1 */

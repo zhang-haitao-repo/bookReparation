@@ -43,5 +43,8 @@ bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/includ
 bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 bookrearation_freertos\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 bookrearation_freertos\main.o: ../Drivers/bsp/bsp_steper.h
+bookrearation_freertos\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+bookrearation_freertos\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+bookrearation_freertos\main.o: ..\Drivers\Api\api_getstep.h
 bookrearation_freertos\main.o: ..\SYSTEM\delay\delay.h
 bookrearation_freertos\main.o: ..\SYSTEM\sys\sys.h

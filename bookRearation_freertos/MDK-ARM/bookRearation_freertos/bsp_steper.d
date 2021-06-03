@@ -29,6 +29,8 @@ bookrearation_freertos\bsp_steper.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1
 bookrearation_freertos\bsp_steper.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 bookrearation_freertos\bsp_steper.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 bookrearation_freertos\bsp_steper.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+bookrearation_freertos\bsp_steper.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+bookrearation_freertos\bsp_steper.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 bookrearation_freertos\bsp_steper.o: ..\SYSTEM\delay\delay.h
 bookrearation_freertos\bsp_steper.o: ..\SYSTEM\sys\sys.h
 bookrearation_freertos\bsp_steper.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h

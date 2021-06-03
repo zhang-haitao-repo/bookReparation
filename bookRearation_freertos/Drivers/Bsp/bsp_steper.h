@@ -2,6 +2,8 @@
 #define __BSP_STEPER_H__
 
 #include "main.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 /*************X轴电机引脚定义****************/
 //Motor 方向引脚
@@ -36,6 +38,7 @@ typedef enum{
 }Axis_TypeDef;
 
 void steper_move(Stepper_TypeDef steper, uint8_t dir, uint32_t speed, float angle);
+void steper_coordinate(float x, float y);
 
 #endif
 

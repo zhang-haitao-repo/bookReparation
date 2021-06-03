@@ -24,7 +24,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "bsp_steper.h"
+#include "api_getstep.h"
 #include "delay.h"
+#include "stdlib.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,18 +44,24 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim5;
+
 UART_HandleTypeDef huart1;
 
 osThreadId startTaskHandle;
 osThreadId beepTaskHandle;
 /* USER CODE BEGIN PV */
 extern Stepper_TypeDef steper[2];
+uint8_t recieveData[100];
+uint8_t aRxBuffer[1];
+uint8_t moveFlag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM5_Init(void);
 void StartDefault(void const * argument);
 void beepTaskStart(void const * argument);
 
@@ -95,12 +103,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   delay_init(72);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET);
-	osDelay(500);
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_RESET);
-	osDelay(500);
+	HAL_UART_Receive_IT(&huart1, aRxBuffer, 1);   //再开启接收中断
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -114,7 +120,7 @@ int main(void)
   /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
-	
+
   /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -141,7 +147,7 @@ int main(void)
 	while (1)
 	{
     /* USER CODE END WHILE */
-		
+
     /* USER CODE BEGIN 3 */
 	}
   /* USER CODE END 3 */
@@ -183,6 +189,65 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief TIM5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+
+  /* USER CODE END TIM5_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 72;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 10000;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 5000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
+  HAL_TIM_MspPostInit(&htim5);
+
 }
 
 /**
@@ -229,10 +294,10 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_SET);
@@ -244,7 +309,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_8, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11, GPIO_PIN_SET);
 
   /*Configure GPIO pins : PC4 PC5 */
   GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5;
@@ -290,16 +355,30 @@ static void MX_GPIO_Init(void)
 void StartDefault(void const * argument)
 {
   /* USER CODE BEGIN 5 */
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET);
+	delay_ms(200);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_RESET);
+	delay_ms(200);
   /* Infinite loop */
-  for(;;)
+  for(;;) 
   {
-	  //steper_move(steper[0], 0, 100, 36);
-	  steper_move(steper[1], 1, 600, 360);
+//		float x = 0;
+//		if(moveFlag == 1)
+//		{
+//			x = getX(recieveData);
+//			steper_coordinate(x,-0);
+//			moveFlag = 0;
+//		}
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
-		osDelay(1000);
-		steper_move(steper[1], 0, 600, 360);
+		osDelay(100);
+//		steper_coordinate(1.2,1);
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);
-		osDelay(1000);
+		osDelay(100);
+		steper_coordinate(-0.2,0.3);
+		steper_coordinate(-0.5,-0.4);
+		steper_coordinate(0.5,0.4);
+		steper_coordinate(-0.2,-0.3);
+		steper_coordinate(0.4,0);
   }
   /* USER CODE END 5 */
 }
@@ -317,12 +396,15 @@ void beepTaskStart(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		steper_move(steper[0], 1, 600, 360);
+//		if(moveFlag == 1)
+//		{
+//			HAL_UART_Transmit(&huart1,recieveData,100,10);
+//			moveFlag = 0;
+//		}
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
-		osDelay(1000);
-		steper_move(steper[0], 0, 600, 360);
+		osDelay(100);
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
-		osDelay(1000);
+		osDelay(100);
   }
   /* USER CODE END beepTaskStart */
 }
