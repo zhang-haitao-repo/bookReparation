@@ -93,6 +93,7 @@ void setSerial::on_openBt_clicked()
 void setSerial::on_close_Bt_clicked()
 {
     serialPort->close();
+    QMessageBox::critical(this,"提示","关闭成功");
 }
 
 void setSerial::serialPortReadyRead_Slot()
