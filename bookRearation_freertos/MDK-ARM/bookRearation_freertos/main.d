@@ -48,3 +48,4 @@ bookrearation_freertos\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 bookrearation_freertos\main.o: ..\Drivers\Api\api_getstep.h
 bookrearation_freertos\main.o: ..\SYSTEM\delay\delay.h
 bookrearation_freertos\main.o: ..\SYSTEM\sys\sys.h
+bookrearation_freertos\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

@@ -33,20 +33,41 @@ void steper_move(Stepper_TypeDef steper, uint8_t dir, uint32_t speed, float angl
 	for(i = 0; i < n; i++)
 	{
 		HAL_GPIO_WritePin(steper.pul_pin_gpio, steper.pul_pin_port, GPIO_PIN_SET);
-		//delay_us(100);
-		osDelay(1);
+		delay_us(speed);
+//		osDelay(1);
 		HAL_GPIO_WritePin(steper.pul_pin_gpio, steper.pul_pin_port, GPIO_PIN_RESET);
-		//delay_us(100);
-		osDelay(1);
+		delay_us(speed);
+//		osDelay(1);
 	}
 }
 
+/**
+* @brief  步进二维平面运动
+* @param  x            		x轴需要移动的位置
+* @param  y               y轴需要移动的距离
+* @note   无
+* @retval 无
+*/
 void steper_coordinate(float x, float y)
 {
     int dir_x = x > 0 ? 1:0;
     float angle_x = x > 0 ? x*360:-x*360;
-    steper_move(steper[0], dir_x, 500, angle_x);
+    steper_move(steper[0], dir_x, 100, angle_x);
 
+    int dir_y = y > 0 ? 1:0;
+    float angle_y = y > 0 ? y*360:-y*360;
+    steper_move(steper[1], dir_y, 100, angle_y);
+}
+
+void steper_coordinate_x(float x)
+{
+    int dir_x = x > 0 ? 1:0;
+    float angle_x = x > 0 ? x*360:-x*360;
+    steper_move(steper[0], dir_x, 500, angle_x);
+}
+
+void steper_coordinate_y(float y)
+{
     int dir_y = y > 0 ? 1:0;
     float angle_y = y > 0 ? y*360:-y*360;
     steper_move(steper[1], dir_y, 500, angle_y);

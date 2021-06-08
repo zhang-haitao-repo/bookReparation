@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,10 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    setserial.cpp \
         widget.cpp \
     mypushbutton.cpp
 
 HEADERS  += widget.h \
-    mypushbutton.h
+    mypushbutton.h \
+    setserial.h
 
-FORMS    += widget.ui
+FORMS    += widget.ui \
+    setserial.ui

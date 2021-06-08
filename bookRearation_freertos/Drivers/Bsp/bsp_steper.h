@@ -21,7 +21,7 @@
 #define Y_MOTOR_PUL_GPIO GPIOC
 #define Y_MOTOR_PUL_PIN GPIO_PIN_4
 
-#define SUBDIVIDE 2
+#define SUBDIVIDE 16
 
 /* 步进电机结构体 */
 typedef struct{
@@ -31,6 +31,13 @@ typedef struct{
 	uint16_t dir_pin_port;  
 }Stepper_TypeDef;
 
+
+/* 步进电机结构体 */
+typedef struct{
+	float x_dis;
+	float y_dis;
+}StepDistance_Def;
+
 /* 坐标轴枚举 */
 typedef enum{
    x_axis = 0U,
@@ -39,6 +46,8 @@ typedef enum{
 
 void steper_move(Stepper_TypeDef steper, uint8_t dir, uint32_t speed, float angle);
 void steper_coordinate(float x, float y);
+void steper_coordinate_x(float x);
+void steper_coordinate_y(float y);
 
 #endif
 

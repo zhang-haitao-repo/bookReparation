@@ -27,6 +27,8 @@
 #include "api_getstep.h"
 #include "delay.h"
 #include "stdlib.h"
+#include "stdio.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,9 +54,11 @@ osThreadId startTaskHandle;
 osThreadId beepTaskHandle;
 /* USER CODE BEGIN PV */
 extern Stepper_TypeDef steper[2];
-uint8_t recieveData[100];
+StepDistance_Def stepDis[150];
+uint8_t recieveData[20];
 uint8_t aRxBuffer[1];
 uint8_t moveFlag = 0;
+uint8_t endIndex  = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,7 +75,37 @@ void beepTaskStart(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int fputc(int ch,FILE *f)
+{
+    uint8_t temp[1]={ch};
+    HAL_UART_Transmit(&huart1,temp,1,2);
+		return 1;
+}
 
+//void readDistance()
+//{
+//	static int i =0;
+//	double disx = 0, disy = 0;
+//	char* ptr;
+//	
+////	strncpy(str_cmd, (char*)recieveData, 5);
+//	if(recieveData[0] == 'd' && recieveData[1] == 'a'){
+//		disx = strtod((char *)recieveData+5, &ptr);
+//		disy = strtod((char *)ptr, &ptr);
+//		memset(recieveData, 0, sizeof(recieveData));
+//		// printf("dis1=[%.3f],dis2=[%.3f]\r\n", disx, disy);
+//		stepDis[i].x_dis = disx;
+//		stepDis[i].y_dis = disy;
+//		
+//		++i;
+//	}else if(recieveData[0] == 'e' && recieveData[1] == 'n'){
+//		printf("data recieve end!!!\r\n");
+//		endIndex = i;
+//		i = 0;
+//		moveFlag = 1;
+//		memset(recieveData, 0, sizeof(recieveData));
+//	}
+//}
 /* USER CODE END 0 */
 
 /**
@@ -131,7 +165,7 @@ int main(void)
   startTaskHandle = osThreadCreate(osThread(startTask), NULL);
 
   /* definition and creation of beepTask */
-  osThreadDef(beepTask, beepTaskStart, osPriorityIdle, 0, 128);
+  osThreadDef(beepTask, beepTaskStart, osPriorityNormal, 0, 128);
   beepTaskHandle = osThreadCreate(osThread(beepTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -362,23 +396,13 @@ void StartDefault(void const * argument)
   /* Infinite loop */
   for(;;) 
   {
-//		float x = 0;
-//		if(moveFlag == 1)
-//		{
-//			x = getX(recieveData);
-//			steper_coordinate(x,-0);
-//			moveFlag = 0;
-//		}
+		int  i = 1;
+
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
 		osDelay(100);
-//		steper_coordinate(1.2,1);
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);
 		osDelay(100);
-		steper_coordinate(-0.2,0.3);
-		steper_coordinate(-0.5,-0.4);
-		steper_coordinate(0.5,0.4);
-		steper_coordinate(-0.2,-0.3);
-		steper_coordinate(0.4,0);
+		i = 1;
   }
   /* USER CODE END 5 */
 }
@@ -396,11 +420,13 @@ void beepTaskStart(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-//		if(moveFlag == 1)
-//		{
-//			HAL_UART_Transmit(&huart1,recieveData,100,10);
-//			moveFlag = 0;
-//		}
+		// readDistance();
+		if(moveFlag == 1){
+			for(int i = 1; i < endIndex - 1; ++i){
+				steper_coordinate(stepDis[i].x_dis - stepDis[i-1].x_dis,stepDis[i].y_dis - stepDis[i-1].y_dis);
+			}
+			moveFlag = 0;
+		}
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
 		osDelay(100);
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);

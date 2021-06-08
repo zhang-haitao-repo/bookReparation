@@ -34,6 +34,7 @@
 "bookrearation_freertos\delay.o"
 "bookrearation_freertos\sys.o"
 "bookrearation_freertos\api_getstep.o"
+"bookrearation_freertos\bsp_array.o"
 --library_type=microlib --strict --scatter "bookRearation_freertos\bookRearation_freertos.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

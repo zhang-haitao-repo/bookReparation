@@ -21,6 +21,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
+#include "delay.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include <string.h>
+#include "bsp_steper.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -43,8 +48,13 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern uint8_t aRxBuffer[1];
-extern uint8_t recieveData[100];
+extern uint8_t recieveData[20];
 extern uint8_t moveFlag;
+extern uint8_t readDataFlag;
+
+extern Stepper_TypeDef steper[2];
+extern StepDistance_Def stepDis[150];
+extern uint8_t endIndex;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -192,6 +202,31 @@ void USART1_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void readDistance()
+{
+	static int i =0;
+	double disx = 0, disy = 0;
+	char* ptr;
+	
+//	strncpy(str_cmd, (char*)recieveData, 5);
+	if(recieveData[0] == 'd' && recieveData[1] == 'a'){
+		disx = strtod((char *)recieveData+5, &ptr);
+		disy = strtod((char *)ptr, &ptr);
+		memset(recieveData, 0, sizeof(recieveData));
+		// printf("dis1=[%.3f],dis2=[%.3f]\r\n", disx, disy);
+		stepDis[i].x_dis = disx;
+		stepDis[i].y_dis = disy;
+		
+		++i;
+	}else if(recieveData[0] == 'e' && recieveData[1] == 'n'){
+		printf("data recieve end!!!\r\n");
+		endIndex = i;
+		i = 0;
+		moveFlag = 1;
+		memset(recieveData, 0, sizeof(recieveData));
+	}
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART1)
@@ -200,8 +235,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		// HAL_UART_Transmit(&huart1,aRxBuffer,1,1);
 		if(aRxBuffer[0] == 0x0a){
 			recieveData[i] = aRxBuffer[0];
+			readDistance();
 			i = 0;
-			moveFlag = 1;
 		}else{
 			recieveData[i] = aRxBuffer[0];
 			++i;

@@ -10,10 +10,11 @@
 float getX(const uint8_t* str)
 {
 	float ret = 0;
-	uint8_t i = 0, index = 0;
+	uint8_t i = 0;
 	while(str[i] != 'x'){
 		i++;
 	}
+	
 	i = str[1] == '-' ? 2 : 1;
 	while(str[i] != ','){
 		uint8_t num = str[i] - 0x30;
