@@ -2,10 +2,12 @@
 #include "cmsis_os.h"
 
 /* 步进电机结构体数组 */
-Stepper_TypeDef steper[2] =
+Stepper_TypeDef steper[4] =
 {
         {MOTOR_PUL_0_GPIO_Port, MOTOR_PUL_0_Pin, MOTOR_DIR_0_GPIO_Port, MOTOR_DIR_0_Pin},
         {MOTOR_PUL_1_GPIO_Port, MOTOR_PUL_1_Pin, MOTOR_DIR_1_GPIO_Port, MOTOR_DIR_1_Pin},
+				{MOTOR_PUL_2_GPIO_Port, MOTOR_PUL_2_Pin, MOTOR_DIR_2_GPIO_Port, MOTOR_DIR_2_Pin},
+				{MOTOR_PUL_3_GPIO_Port, MOTOR_PUL_3_Pin, MOTOR_DIR_3_GPIO_Port, MOTOR_DIR_3_Pin},
 };
 
 /**

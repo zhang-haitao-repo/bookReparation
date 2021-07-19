@@ -45,3 +45,6 @@ book-reparation-m4\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/ti
 book-reparation-m4\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 book-reparation-m4\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 book-reparation-m4\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+book-reparation-m4\main.o: ../Drivers/Bsp/bsp_steper.h
+book-reparation-m4\main.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+book-reparation-m4\main.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

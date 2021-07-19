@@ -50,6 +50,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -64,16 +66,36 @@ void Error_Handler(void);
 #define LED3_GPIO_Port GPIOE
 #define BEEP_Pin GPIO_PIN_10
 #define BEEP_GPIO_Port GPIOI
+#define MOTOR_DIR_2_Pin GPIO_PIN_1
+#define MOTOR_DIR_2_GPIO_Port GPIOF
+#define RELAY_3_Pin GPIO_PIN_0
+#define RELAY_3_GPIO_Port GPIOC
+#define RELAY_2_Pin GPIO_PIN_3
+#define RELAY_2_GPIO_Port GPIOC
+#define RELAY_1_Pin GPIO_PIN_4
+#define RELAY_1_GPIO_Port GPIOA
+#define RELAY_0_Pin GPIO_PIN_6
+#define RELAY_0_GPIO_Port GPIOA
 #define LED1_Pin GPIO_PIN_9
 #define LED1_GPIO_Port GPIOH
 #define MOTOR_DIR_1_Pin GPIO_PIN_11
 #define MOTOR_DIR_1_GPIO_Port GPIOD
+#define MOTOR_DIR_3_Pin GPIO_PIN_8
+#define MOTOR_DIR_3_GPIO_Port GPIOC
+#define MOTOR_PUL_3_Pin GPIO_PIN_2
+#define MOTOR_PUL_3_GPIO_Port GPIOI
+#define RS_232_TX_Pin GPIO_PIN_12
+#define RS_232_TX_GPIO_Port GPIOC
+#define RS_232_RX_Pin GPIO_PIN_2
+#define RS_232_RX_GPIO_Port GPIOD
 #define MOTOR_DIR_0_Pin GPIO_PIN_3
 #define MOTOR_DIR_0_GPIO_Port GPIOD
 #define MOTOR_PUL_0_Pin GPIO_PIN_5
 #define MOTOR_PUL_0_GPIO_Port GPIOI
 #define MOTOR_PUL_1_Pin GPIO_PIN_6
 #define MOTOR_PUL_1_GPIO_Port GPIOI
+#define MOTOR_PUL_2_Pin GPIO_PIN_7
+#define MOTOR_PUL_2_GPIO_Port GPIOI
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

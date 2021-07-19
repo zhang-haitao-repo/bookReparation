@@ -21,7 +21,7 @@
 //#define Y_MOTOR_PUL_GPIO GPIOC
 //#define Y_MOTOR_PUL_PIN GPIO_PIN_4
 
-#define SUBDIVIDE 16
+#define SUBDIVIDE 4
 
 /* 步进电机结构体 */
 typedef struct{
