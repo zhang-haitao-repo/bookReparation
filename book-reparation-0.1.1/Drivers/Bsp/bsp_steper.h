@@ -79,9 +79,28 @@ void steperMove045mm(int step, uint8_t dir, uint32_t speed);
 */
 void steperMove(uint8_t i, uint8_t dir, uint32_t speed, uint32_t dis);
 
-void steper_coordinate(float x, float y);
-void steper_coordinate_x(float x);
-void steper_coordinate_y(float y);
+/**
+* @brief  步进电机步进pul个单位(一个Pul代表0.45mm)
+* @param  i            			被控电机的序号
+* @param  dir               选择正反转(取值范围：0,1)
+* @param  speed             方波周期 单位MS   周期越短频率越高，转速越快 
+* @param  pul 							步进pul个单位距离  
+* @note   无
+* @retval 无
+*/
+void steperMovePul(uint8_t step, uint8_t dir, uint32_t speed, uint32_t pul);
+
+/**
+* @brief  步进二维平面运动
+* @param  x            		x轴移动的位置
+* @param  y               y轴移动的距离
+* @note   无
+* @retval 无
+*/
+void steperCoordinateMajor(float major_x, float major_y);
+
+void steperCoordinateMajorX(float major_x);
+void steperCoordinateMajorY(float major_y);
 
 #endif
 

@@ -1,0 +1,6 @@
+--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Drivers/Bsp -I..\SYSTEM\delay -I..\SYSTEM\sys
+-I D:\Git_repo\book-reparation\book-reparation-0.1.1\MDK-ARM\RTE
+-I "d:\Program Files (x86)\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include"
+-I "d:\Program Files (x86)\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0"
+-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx
+-o book-reparation-m4\bsp_steper.o --omf_browse book-reparation-m4\bsp_steper.crf --depend book-reparation-m4\bsp_steper.d "..\Drivers\Bsp\bsp_steper.c"

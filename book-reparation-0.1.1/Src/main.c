@@ -484,12 +484,8 @@ void StartDefaultTask(void const * argument)
 	
 	returnOrigin();
 	
-	str = pvPortMalloc(24);
-	sprintf(str, "Xdistance=[%0.3f]\r\n", stepers[0].distance);
-	HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 20);
-	vPortFree(str);
-	str = NULL;
-	
+	HAL_GPIO_WritePin(RELAY_0_GPIO_Port, RELAY_0_Pin, GPIO_PIN_RESET); // ÎüÆøÆø±Ã
+	HAL_GPIO_WritePin(RELAY_3_GPIO_Port, RELAY_3_Pin, GPIO_PIN_SET);   // ²¹¹âµÆ
   /* Infinite loop */
   for(;;)
   {
@@ -498,7 +494,7 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 		osDelay(1000);
 		
-//		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+		// HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
 //		steper_move(steper[2], 0, 2000, 90);
 //		steper_move(steper[3], 0, 2000, 90);
 //		steper_move(steper[2], 1, 2000, 90);
@@ -546,11 +542,21 @@ void StepmoveTask(void const * argument)
     if(recieveData[0] == 0x01){
       uint8_t motor = recieveData[1];
       uint8_t dir = recieveData[2];
-      uint16_t dis = recieveData[3] << 8 | recieveData[4];
-      steperMove(motor, dir, 1000, dis);
+      uint16_t pul = recieveData[3] << 8 | recieveData[4];
+      steperMovePul(motor, dir, 1000, pul);
       sprintf(str, "motor%d dis=[%0.3f]\r\n", motor, stepers[motor].distance);
       HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 24);
-    }
+    }else if(recieveData[0] == 0x02){
+			uint16_t x = recieveData[1] << 8 | recieveData[2];
+			uint16_t y = recieveData[3] << 8 | recieveData[4];
+			double major_x = x*0.45;
+			double major_y = y*0.45;
+			steperCoordinateMajor(major_x, major_y);
+		}else if(recieveData[0] == 0x03){
+			int laser = recieveData[1];
+			
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, (GPIO_PinState)laser);
+		}
     
     vPortFree(str);
     osDelay(10);
