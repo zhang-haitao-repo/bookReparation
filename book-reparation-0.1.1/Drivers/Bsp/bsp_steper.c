@@ -48,19 +48,38 @@ void steper_move(Stepper_TypeDef steper, uint8_t dir, uint32_t speed, float angl
 * @note   无
 * @retval 无
 */
-void steperMove045mm(Stepper_TypeDef steper, uint8_t dir, uint32_t speed)
+void steperMove045mm(int step, uint8_t dir, uint32_t speed)
 {
-    /* 确定电机运动方向*/
+	Stepper_TypeDef* steper = &stepers[step];
+  /* 确定电机运动方向*/
 	GPIO_PinState step_dir = dir==0?GPIO_PIN_RESET:GPIO_PIN_SET;
-	HAL_GPIO_WritePin(steper.dir_pin_gpio, steper.dir_pin_port, step_dir);
+	HAL_GPIO_WritePin(steper->dir_pin_gpio, steper->dir_pin_port, step_dir);
 	// osDelay(1);
 	/*模拟方波*/
-	for(int i = 0; i < 5; i++)
-	{
-		HAL_GPIO_WritePin(steper.pul_pin_gpio, steper.pul_pin_port, GPIO_PIN_SET);
-		delay_us(speed);
-		HAL_GPIO_WritePin(steper.pul_pin_gpio, steper.pul_pin_port, GPIO_PIN_RESET);
-		delay_us(speed);
+	if(step == 1 || step == 0){
+		for(int i = 0; i < 5; i++)
+		{
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_SET);
+			delay_us(speed);
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_RESET);
+			delay_us(speed);
+		}
+	}else if(step == 2){
+		for(int i = 0; i < 6; i++)
+		{
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_SET);
+			delay_us(speed);
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_RESET);
+			delay_us(speed);
+		}
+	}else{
+		for(int i = 0; i < 72; i++)
+		{
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_SET);
+			delay_us(50);
+			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_RESET);
+			delay_us(50);
+		}
 	}
 }
 
@@ -75,15 +94,15 @@ void steperMove045mm(Stepper_TypeDef steper, uint8_t dir, uint32_t speed)
 */
 void steperMove(uint8_t step, uint8_t dir, uint32_t speed, uint32_t dis)
 {
-	Stepper_TypeDef* steper = &stepers[step];
+	
 	int n = dis/0.45;
 	for(int i = 0; i < n; ++i){
-		steperMove045mm(*steper, dir, speed);
+		steperMove045mm(step, dir, speed);
 	}
-  if(step == 0 || step == 2){
-    steper->distance = dir == 1 ? steper->distance + dis : steper->distance - dis;
+  if(step == 0){
+    stepers[step].distance = dir == 1 ? stepers[step].distance + dis : stepers[step].distance - dis;
   }else{
-    steper->distance = dir == 0 ? steper->distance + dis : steper->distance - dis;
+    stepers[step].distance = dir == 0 ? stepers[step].distance + dis : stepers[step].distance - dis;
   }
 }
 

@@ -71,7 +71,14 @@ void returnOrigin(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void NVIC_Close_Config()
+{
+  HAL_NVIC_DisableIRQ(EXTI3_IRQn);
 
+  HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
+}
 /**
 * @brief  return 0 point
 * @param  нч          
@@ -81,16 +88,36 @@ void returnOrigin(void);
 void returnOrigin()
 {
 	while(stepers[0].stopFlag == 0){
-		steperMove045mm(stepers[0], 0, 1000);
+		steperMove045mm(0, 0, 1000);
 	}
 	stepers[0].distance = 0;
 	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step1 is up\n",13);
 	
+	stepers[1].stopFlag = 0;
 	while(stepers[1].stopFlag == 0){
-		steperMove045mm(stepers[1], 1, 1000);
+		steperMove045mm(1, 1, 1000);
 	}
   stepers[1].distance = 0;
 	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step2 is up\t\n",13);
+	
+	steperMove(3, 0, 1000, 10);
+	steperMove(2, 0, 1000, 10);
+	osDelay(50);
+	stepers[2].stopFlag = 0;
+	stepers[3].stopFlag = 0;
+	while(stepers[2].stopFlag == 0){
+		steperMove045mm(2, 1, 1000);
+	}
+  stepers[2].distance = 0;
+	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step3 is up\t\n",13);
+	
+	while(stepers[3].stopFlag == 0){
+		steperMove045mm(3, 1, 50);
+	}
+  stepers[3].distance = 0;
+	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step4 is up\t\n",13);
+	
+	NVIC_Close_Config();
 }
 
 /* USER CODE END 0 */

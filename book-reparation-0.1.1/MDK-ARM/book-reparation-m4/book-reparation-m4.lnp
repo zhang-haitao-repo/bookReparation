@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu Cortex-M4.fp
 "book-reparation-m4\startup_stm32f407xx.o"
 "book-reparation-m4\bsp_steper.o"
 "book-reparation-m4\delay.o"
@@ -35,6 +35,6 @@
 "book-reparation-m4\heap_4.o"
 "book-reparation-m4\port.o"
 --library_type=microlib --strict --scatter "book-reparation-m4\book-reparation-m4.sct"
---summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "book-reparation-m4.map" -o book-reparation-m4\book-reparation-m4.axf

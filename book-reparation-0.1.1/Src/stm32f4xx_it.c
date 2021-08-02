@@ -62,6 +62,7 @@ uint8_t recieveData[20];
 
 /* External variables --------------------------------------------------------*/
 extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 extern TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN EV */
@@ -223,6 +224,20 @@ void USART1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
+
+/**
   * @brief This function handles EXTI line[15:10] interrupts.
   */
 void EXTI15_10_IRQHandler(void)
@@ -260,25 +275,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//HAL_UART_Transmit_IT(&huart1, "key1 is up\n",13);
 	if(GPIO_Pin == GPIO_PIN_6){
+		// HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key1 is up\n",13);
 		stepers[0].stopFlag = 1;
-		HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key1 is up\n",13);
 	}else if(GPIO_Pin == GPIO_PIN_7){
-		static int count2 = 0;
-		count2++;
-		if(count2 >= 2000){
-			HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key2 is up\n",13);
-			stepers[1].stopFlag = 1;
-		} 
+		// HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key2 is up\n",13);
+		stepers[1].stopFlag = 1;
 	}else if(GPIO_Pin == GPIO_PIN_15){
+		// HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key3 is up\n",13);
 		stepers[2].stopFlag = 1;
-		HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key3 is up\n",13);
 	}else if(GPIO_Pin == GPIO_PIN_3){
-		static int count4 = 0;
-		count4++;
-		if(count4 >= 200){
-			stepers[3].stopFlag = 1;
-			HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key4 is up\n",13);
-		}
+		// HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key4 is up\n",13);
+		stepers[3].stopFlag = 1;
 	}
 }
 

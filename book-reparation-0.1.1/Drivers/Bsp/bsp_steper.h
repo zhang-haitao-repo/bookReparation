@@ -66,7 +66,7 @@ void steper_move(Stepper_TypeDef steper, uint8_t dir, uint32_t speed, float angl
 * @note   无
 * @retval 无
 */
-void steperMove045mm(Stepper_TypeDef steper, uint8_t dir, uint32_t speed);
+void steperMove045mm(int step, uint8_t dir, uint32_t speed);
 
 /**
 * @brief  步进电机步进dis毫米

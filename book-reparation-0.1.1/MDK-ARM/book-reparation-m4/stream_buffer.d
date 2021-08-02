@@ -1,8 +1,8 @@
 book-reparation-m4\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
-book-reparation-m4\stream_buffer.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-book-reparation-m4\stream_buffer.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+book-reparation-m4\stream_buffer.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+book-reparation-m4\stream_buffer.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 book-reparation-m4\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-book-reparation-m4\stream_buffer.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+book-reparation-m4\stream_buffer.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 book-reparation-m4\stream_buffer.o: ../Inc/FreeRTOSConfig.h
 book-reparation-m4\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 book-reparation-m4\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

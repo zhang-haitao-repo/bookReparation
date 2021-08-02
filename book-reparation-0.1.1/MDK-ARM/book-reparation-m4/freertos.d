@@ -1,7 +1,7 @@
 book-reparation-m4\freertos.o: ../Src/freertos.c
 book-reparation-m4\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-book-reparation-m4\freertos.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-book-reparation-m4\freertos.o: d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+book-reparation-m4\freertos.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+book-reparation-m4\freertos.o: d:\Program Files (x86)\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 book-reparation-m4\freertos.o: ../Inc/FreeRTOSConfig.h
 book-reparation-m4\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 book-reparation-m4\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

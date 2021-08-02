@@ -834,11 +834,12 @@ ARM Macro Assembler    Page 13
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=book-reparation-m4\startup_stm32f407xx.d -obook-reparation-m4\s
-tartup_stm32f407xx.o -I..\Inc -I.\RTE\_book-reparation-m4 -ID:\Keil_v5\ARM\PACK
-\ARM\CMSIS\5.3.0\CMSIS\Include -ID:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0\D
-rivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1" --pred
-efine="__UVISION_VERSION SETA 525" --predefine="_RTE_ SETA 1" --predefine="STM3
-2F407xx SETA 1" --list=startup_stm32f407xx.lst startup_stm32f407xx.s
+tartup_stm32f407xx.o -I..\Inc -ID:\Git_repo\book-reparation\book-reparation-0.1
+.1\MDK-ARM\RTE -I"d:\Program Files (x86)\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS
+\Include" -I"d:\Program Files (x86)\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.9.0" 
+--predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 514" --pred
+efine="_RTE_ SETA 1" --predefine="STM32F407xx SETA 1" --list=startup_stm32f407x
+x.lst startup_stm32f407xx.s
 
 
 

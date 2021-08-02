@@ -6,9 +6,12 @@ SourceFiles=..\Src\main.c;..\Src\freertos.c;..\Src\stm32f4xx_it.c;..\Src\stm32f4
 HeaderPath=..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM4F;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Inc;
 CDefines=USE_HAL_DRIVER;STM32F407xx;USE_HAL_DRIVER;USE_HAL_DRIVER;
 
+[]
+SourceFiles=;;
+
 [PreviousGenFiles]
-HeaderPath=F:/git_repo/book-reparation/book-reparation-m4/Inc
+HeaderPath=D:/Git_repo/book-reparation/book-reparation-0.1.1/Inc
 HeaderFiles=FreeRTOSConfig.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;
-SourcePath=F:/git_repo/book-reparation/book-reparation-m4/Src
+SourcePath=D:/Git_repo/book-reparation/book-reparation-0.1.1/Src
 SourceFiles=freertos.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;stm32f4xx_hal_timebase_tim.c;main.c;
 
