@@ -99,6 +99,15 @@ void steperMovePul(uint8_t step, uint8_t dir, uint32_t speed, uint32_t pul);
 */
 void steperCoordinateMajor(float major_x, float major_y);
 
+/**
+* @brief  步进主轴二维平面运动
+* @param  x            		x轴移动的位置
+* @param  y               y轴移动的距离
+* @note   无
+* @retval 无
+*/
+void steperCoordinateSecond(float Second_x, float Second_y);
+
 void steperCoordinateMajorX(float major_x);
 void steperCoordinateMajorY(float major_y);
 

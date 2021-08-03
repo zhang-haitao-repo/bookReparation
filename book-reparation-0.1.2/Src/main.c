@@ -475,7 +475,9 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
 	HAL_GPIO_WritePin(BEEP_GPIO_Port, BEEP_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(RELAY_1_GPIO_Port, RELAY_1_Pin, GPIO_PIN_RESET); // 吹气 气泵
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);	
+	
 	osDelay(1000);
 	HAL_GPIO_WritePin(BEEP_GPIO_Port, BEEP_Pin, GPIO_PIN_SET);
 	osDelay(200);
@@ -484,21 +486,16 @@ void StartDefaultTask(void const * argument)
 	
 	returnOrigin();
 	
-	HAL_GPIO_WritePin(RELAY_0_GPIO_Port, RELAY_0_Pin, GPIO_PIN_RESET); // 吸气气泵
-	HAL_GPIO_WritePin(RELAY_3_GPIO_Port, RELAY_3_Pin, GPIO_PIN_SET);   // 补光灯
+	HAL_GPIO_WritePin(RELAY_1_GPIO_Port, RELAY_1_Pin, GPIO_PIN_RESET); // 吹气 气泵
   /* Infinite loop */
   for(;;)
   {
+		HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,0,40", 7);
 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
-    osDelay(1000);
+    osDelay(4000);
+		HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,1,40", 7);
 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
-		osDelay(1000);
-		
-		// HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
-//		steper_move(steper[2], 0, 2000, 90);
-//		steper_move(steper[3], 0, 2000, 90);
-//		steper_move(steper[2], 1, 2000, 90);
-//		steper_move(steper[3], 1, 2000, 90);
+		osDelay(4000);
   }
   /* USER CODE END 5 */
 }
@@ -516,7 +513,6 @@ void LimitTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		
 		osDelay(10);
   }
   /* USER CODE END LimitTask */
@@ -547,15 +543,15 @@ void StepmoveTask(void const * argument)
       sprintf(str, "motor%d dis=[%0.3f]\r\n", motor, stepers[motor].distance);
       HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 24);
     }else if(recieveData[0] == 0x02){
-			uint16_t x = recieveData[1] << 8 | recieveData[2];
-			uint16_t y = recieveData[3] << 8 | recieveData[4];
+			uint8_t model = recieveData[1];
+			uint16_t x = recieveData[2] << 8 | recieveData[3];
+			uint16_t y = recieveData[4] << 8 | recieveData[5];
 			double major_x = x*0.45;
 			double major_y = y*0.45;
-			steperCoordinateMajor(major_x, major_y);
+			model == 0x00 ?	steperCoordinateMajor(major_x, major_y):steperCoordinateSecond(major_x, major_y);
 		}else if(recieveData[0] == 0x03){
 			int laser = recieveData[1];
-			
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, (GPIO_PinState)laser);
+			HAL_GPIO_WritePin(RELAY_3_GPIO_Port, RELAY_3_Pin, (GPIO_PinState)laser); // 激光
 		}
     
     vPortFree(str);

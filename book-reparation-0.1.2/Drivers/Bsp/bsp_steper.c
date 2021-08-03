@@ -157,14 +157,14 @@ void steperCoordinateMajor(float major_x, float major_y)
 */
 void steperCoordinateSecond(float Second_x, float Second_y)
 {
-	double x = (double)504.9 - Second_x - stepers[2].distance;
-	double y = Second_y - (double)70.0 - stepers[3].distance;
+	double x = (double)954.9 - Second_x - stepers[2].distance;
+	double y = Second_y - (double)31.5 - stepers[3].distance;
 	
 	int dir_y = y > 0 ? 0:1;
 	float dis_y = y > 0 ? y:-y;
 	steperMove(3, dir_y, 1000, dis_y);
 	
-	int dir_x = x > 0 ? 1:0;
+	int dir_x = x > 0 ? 0:1;
 	float dis_x = x > 0 ? x:-x;
 	steperMove(2, dir_x, 1000, dis_x);
 }

@@ -273,7 +273,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	//HAL_UART_Transmit_IT(&huart1, "key1 is up\n",13);
 	if(GPIO_Pin == GPIO_PIN_6){
 		// HAL_UART_Transmit_IT(&huart1, (uint8_t *)"key1 is up\n",13);
 		stepers[0].stopFlag = 1;
