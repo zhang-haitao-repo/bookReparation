@@ -76,9 +76,9 @@ void steperMove045mm(int step, uint8_t dir, uint32_t speed)
 		for(int i = 0; i < 72; i++)
 		{
 			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_SET);
-			delay_us(50);
+			delay_us(speed/20);
 			HAL_GPIO_WritePin(steper->pul_pin_gpio, steper->pul_pin_port, GPIO_PIN_RESET);
-			delay_us(50);
+			delay_us(speed/20);
 		}
 	}
 }
@@ -92,14 +92,14 @@ void steperMove045mm(int step, uint8_t dir, uint32_t speed)
 * @note   无
 * @retval 无
 */
-void steperMove(uint8_t step, uint8_t dir, uint32_t speed, uint32_t dis)
+void steperMove(uint8_t step, uint8_t dir, uint32_t speed, double dis)
 {
 	
 	int n = dis/0.45;
 	for(int i = 0; i < n; ++i){
 		steperMove045mm(step, dir, speed);
 	}
-  if(step == 0){
+  if(step == 0 || step == 2){
     stepers[step].distance = dir == 1 ? stepers[step].distance + dis : stepers[step].distance - dis;
   }else{
     stepers[step].distance = dir == 0 ? stepers[step].distance + dis : stepers[step].distance - dis;
@@ -120,11 +120,53 @@ void steperMovePul(uint8_t step, uint8_t dir, uint32_t speed, uint32_t pul)
 	for(int i = 0; i < pul; ++i){
 		steperMove045mm(step, dir, speed);
 	}
-  if(step == 0){
-    stepers[step].distance = dir == 1 ? stepers[step].distance + pul*0.45 : stepers[step].distance - pul*0.45;
+  if(step == 0 || step == 2){
+    stepers[step].distance = dir == 1 ? stepers[step].distance + (double)pul*0.45 : stepers[step].distance - (double)pul*0.45;
   }else{
-    stepers[step].distance = dir == 0 ? stepers[step].distance + pul*0.45 : stepers[step].distance - pul*0.45;
+    stepers[step].distance = dir == 0 ? stepers[step].distance + (double)pul*0.45 : stepers[step].distance - (double)pul*0.45;
   }
+}
+
+/**
+* @brief  步进主轴二维平面运动
+* @param  x            		x轴移动的位置
+* @param  y               y轴移动的距离
+* @note   无
+* @retval 无
+*/
+void steperCoordinateMajorPul(uint16_t First_x, uint16_t First_y, uint16_t speed)
+{
+	int x = First_x - stepers[0].distance/0.45;
+	int y = First_y - stepers[1].distance/0.45;
+	
+	int dir_y = y > 0 ? 0:1;
+	uint16_t pul_y = y > 0 ? y:-y;
+	steperMovePul(1, dir_y, speed, pul_y);
+	
+	int dir_x = x > 0 ? 1:0;
+	uint16_t pul_x = x > 0 ? x:-x;
+	steperMovePul(0, dir_x, speed, pul_x);
+}
+
+/**
+* @brief  步进主轴二维平面运动
+* @param  x            		x轴移动的位置
+* @param  y               y轴移动的距离
+* @note   无
+* @retval 无
+*/
+void steperCoordinateSecondPul(uint16_t Second_x, uint16_t Second_y, uint16_t speed)
+{
+	int x = Second_x - stepers[2].distance/0.45;
+	int y = Second_y - stepers[3].distance/0.45;
+	
+	int dir_y = y > 0 ? 0:1;
+	uint16_t pul_y = y > 0 ? y:-y;
+	steperMovePul(3, dir_y, speed, pul_y);
+	
+	int dir_x = x > 0 ? 1:0;
+	uint16_t pul_x = x > 0 ? x:-x;
+	steperMovePul(2, dir_x, speed, pul_x);
 }
 
 /**
@@ -157,14 +199,14 @@ void steperCoordinateMajor(float major_x, float major_y)
 */
 void steperCoordinateSecond(float Second_x, float Second_y)
 {
-	double x = (double)954.9 - Second_x - stepers[2].distance;
-	double y = Second_y - (double)31.5 - stepers[3].distance;
+	double x = Second_x - stepers[2].distance;
+	double y = Second_y - stepers[3].distance;
 	
 	int dir_y = y > 0 ? 0:1;
 	float dis_y = y > 0 ? y:-y;
 	steperMove(3, dir_y, 1000, dis_y);
 	
-	int dir_x = x > 0 ? 0:1;
+	int dir_x = x > 0 ? 1:0;
 	float dis_x = x > 0 ? x:-x;
 	steperMove(2, dir_x, 1000, dis_x);
 }

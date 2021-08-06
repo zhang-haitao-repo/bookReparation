@@ -50,6 +50,36 @@ osThreadId limitTaskHandle;
 osThreadId stepmoveTaskHandle;
 osSemaphoreId mySem_moveHandle;
 /* USER CODE BEGIN PV */
+uint16_t qiegtrace[151][2]={
+	 {1432,401},{1432,403},{1432,405},{1432,407},{1431,409},{1431,410},{1431,412},{1430,414},{1429,416},{1429,418},
+	 {1428,419},{1427,421},{1426,423},{1425,424},{1424,426},{1423,427},{1422,429},{1421,430},{1420,432},{1418,433},
+	 {1417,434},{1416,436},{1414,437},{1413,438},{1411,439},{1410,440},{1408,441},{1406,442},{1404,442},{1403,443},
+	 {1401,444},{1399,444},{1397,445},{1395,445},{1394,446},{1392,446},{1390,446},{1388,446},{1386,446},{1384,446},
+	 {1382,446},{1380,446},{1379,445},{1377,445},{1375,444},{1373,444},{1371,443},{1370,442},{1368,442},{1366,441},
+	 {1365,440},{1363,439},{1361,438},{1360,437},{1358,436},{1357,434},{1356,433},{1354,432},{1353,430},{1352,429},
+	 {1351,427},{1350,426},{1349,424},{1348,423},{1347,421},{1346,419},{1345,418},{1345,416},{1344,414},{1343,412},
+	 {1343,410},{1343,409},{1342,407},{1342,405},{1342,403},{1342,401},{1342,399},{1342,397},{1342,395},{1343,393},
+	 {1343,392},{1343,390},{1344,388},{1345,386},{1345,384},{1346,383},{1347,381},{1348,379},{1349,378},{1350,376},
+	 {1351,375},{1352,373},{1353,372},{1354,370},{1356,369},{1357,368},{1358,366},{1360,365},{1361,364},{1363,363},
+	 {1365,362},{1366,361},{1368,360},{1370,360},{1371,359},{1373,358},{1375,358},{1377,357},{1379,357},{1380,356},
+	 {1382,356},{1384,356},{1386,356},{1388,356},{1390,356},{1392,356},{1394,356},{1395,357},{1397,357},{1399,358},
+	 {1401,358},{1403,359},{1404,360},{1406,360},{1408,361},{1410,362},{1411,363},{1413,364},{1414,365},{1416,366},
+	 {1417,368},{1418,369},{1420,370},{1421,372},{1422,373},{1423,375},{1424,376},{1425,378},{1426,379},{1427,381},
+	 {1428,383},{1429,384},{1429,386},{1430,388},{1431,390},{1431,392},{1431,393},{1432,395},{1432,397},{1432,399},
+	 {1432,401}} ;
+
+uint16_t xiftrace[101][2]={
+	 {359,746},{359,748},{359,750},{358,752},{358,754},{357,756},{357,758},{356,760},{355,762},{354,764},{353,765},
+	 {351,767},{350,769},{349,770},{347,771},{345,773},{344,774},{342,775},{340,776},{338,777},{336,777},{334,778},
+	 {332,778},{330,779},{328,779},{326,779},{324,779},{322,779},{320,778},{318,778},{316,777},{314,777},{312,776},
+	 {310,775},{308,774},{307,773},{305,771},{303,770},{302,769},{301,767},{299,765},{298,764},{297,762},{296,760},
+	 {295,758},{295,756},{294,754},{294,752},{293,750},{293,748},{293,746},{293,744},{293,742},{294,740},{294,738},
+	 {295,736},{295,734},{296,732},{297,730},{298,728},{299,727},{301,725},{302,723},{303,722},{305,721},{307,719},
+	 {308,718},{310,717},{312,716},{314,715},{316,715},{318,714},{320,714},{322,713},{324,713},{326,713},{328,713},
+	 {330,713},{332,714},{334,714},{336,715},{338,715},{340,716},{342,717},{344,718},{345,719},{347,721},{349,722},
+	 {350,723},{351,725},{353,727},{354,728},{355,730},{356,732},{357,734},{357,736},{358,738},{358,740},{359,742},
+	 {359,744},{359,746}};
+
 extern Stepper_TypeDef stepers[4];
 extern uint8_t recieveData[20];
 extern uint8_t stopflag;
@@ -108,15 +138,17 @@ void returnOrigin()
 	while(stepers[2].stopFlag == 0){
 		steperMove045mm(2, 1, 1000);
 	}
-  stepers[2].distance = 0;
+  stepers[2].distance = 954.9;
 	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step3 is up\t\n",13);
 	
 	while(stepers[3].stopFlag == 0){
-		steperMove045mm(3, 1, 50);
+		steperMove045mm(3, 1, 1000);
 	}
-  stepers[3].distance = 0;
+  stepers[3].distance = 31.50;
 	HAL_UART_Transmit_IT(&huart1, (uint8_t *)"step4 is up\t\n",13);
-	
+/*
+   电机方向： 正：0号.1	  1号.0   
+*/
 	NVIC_Close_Config();
 }
 
@@ -490,10 +522,10 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,0,40", 7);
+		// HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,0,40", 7);
 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
     osDelay(4000);
-		HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,1,40", 7);
+		// HAL_UART_Transmit_IT(&huart2, (uint8_t *)"1,1,40", 7);
 		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 		osDelay(4000);
   }
@@ -532,26 +564,35 @@ void StepmoveTask(void const * argument)
   for(;;)
   {
     xSemaphoreTake(mySem_moveHandle, portMAX_DELAY); 
-    
-    HAL_UART_Transmit_IT(&huart1, (uint8_t *)"Recieve OK!\r\n",13);
-    str = pvPortMalloc(24);
+//    HAL_UART_Transmit_IT(&huart1, (uint8_t *)"Recieve OK!\r\n",13);
+    str = pvPortMalloc(48);
     if(recieveData[0] == 0x01){
       uint8_t motor = recieveData[1];
       uint8_t dir = recieveData[2];
       uint16_t pul = recieveData[3] << 8 | recieveData[4];
       steperMovePul(motor, dir, 1000, pul);
-      sprintf(str, "motor%d dis=[%0.3f]\r\n", motor, stepers[motor].distance);
-      HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 24);
+			
+			sprintf(str, "motor[%d]:dis=[%0.3f]\r\n", motor, stepers[motor].distance);
+			HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 48);
+			
     }else if(recieveData[0] == 0x02){
 			uint8_t model = recieveData[1];
 			uint16_t x = recieveData[2] << 8 | recieveData[3];
 			uint16_t y = recieveData[4] << 8 | recieveData[5];
-			double major_x = x*0.45;
-			double major_y = y*0.45;
-			model == 0x00 ?	steperCoordinateMajor(major_x, major_y):steperCoordinateSecond(major_x, major_y);
+
+			model == 0x00 ?	steperCoordinateMajorPul(x, y, 1000):steperCoordinateSecondPul(x, y, 1000);
+			model == 0x00 ?	sprintf(str, "X1=[%0.3f] Y2=[%0.3f]\r\n", stepers[0].distance, stepers[1].distance) 
+										: sprintf(str, "X3=[%0.3f] Y4=[%0.3f]\r\n", stepers[2].distance, stepers[3].distance);
+      HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 48);
+			
 		}else if(recieveData[0] == 0x03){
-			int laser = recieveData[1];
-			HAL_GPIO_WritePin(RELAY_3_GPIO_Port, RELAY_3_Pin, (GPIO_PinState)laser); // 激光
+			int state = recieveData[1];
+			HAL_GPIO_WritePin(RELAY_3_GPIO_Port, RELAY_3_Pin, (GPIO_PinState)state); // 激光
+		
+		}else if(recieveData[0] == 0x04){
+			sprintf(str, "[%0.3f,%0.3f,%0.3f,%0.3f]\r\n", stepers[0].distance, stepers[1].distance, stepers[2].distance, stepers[3].distance);
+			HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, 48);
+			
 		}
     
     vPortFree(str);

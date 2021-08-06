@@ -77,7 +77,7 @@ void steperMove045mm(int step, uint8_t dir, uint32_t speed);
 * @note   无
 * @retval 无
 */
-void steperMove(uint8_t i, uint8_t dir, uint32_t speed, uint32_t dis);
+void steperMove(uint8_t i, uint8_t dir, uint32_t speed, double dis);
 
 /**
 * @brief  步进电机步进pul个单位(一个Pul代表0.45mm)
@@ -90,6 +90,24 @@ void steperMove(uint8_t i, uint8_t dir, uint32_t speed, uint32_t dis);
 */
 void steperMovePul(uint8_t step, uint8_t dir, uint32_t speed, uint32_t pul);
 
+/**
+* @brief  步进主轴二维平面运动
+* @param  x            		x轴移动的位置
+* @param  y               y轴移动的距离
+* @note   无
+* @retval 无
+*/
+void steperCoordinateMajorPul(uint16_t x, uint16_t y, uint16_t speed);
+
+/**
+* @brief  步进副轴二维平面运动
+* @param  x            		x轴移动的步长
+* @param  y               y轴移动的步长
+* @note   无
+* @retval 无
+*/
+void steperCoordinateSecondPul(uint16_t Second_x, uint16_t Second_y, uint16_t speed);
+	
 /**
 * @brief  步进二维平面运动
 * @param  x            		x轴移动的位置
